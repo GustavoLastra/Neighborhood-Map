@@ -45,20 +45,43 @@ function markersInit() {
   }
 }
 
-//  sideNav
-function myFunction() {
-    var input = $('#myInput');
-    var filter = input.val().toUpperCase();
-    var ul = $("#myUL");
-    var li = $("li");
-
+/* ViewModel */
+ko.bindingHandlers.executeOnEnter = {
+    init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+        // This will be called when the binding is first applied to an element
+        // Set up any initial state, event handlers, etc. here
+        var callback = valueAccessor();
+        $(element).keypress(function (event) {
+            var keyCode = (event.which ? event.which : event.keyCode);
+            if (keyCode === 13) {
+                callback.call(viewModel);
+                return false;
+            }
+            return true;
+        });
+    }
+};
+function AppViewModel() {
+  this.searchInput = ko.observable();
+  var c = this.searchInput();
+  console.log(c);
+  var ul = $("#myUL");
+  var li = $("li");
+  this.filter = function(){
+    console.log(this.searchInput());
+    this.searchInput(this.searchInput().toUpperCase()); // Write back a modified value
     for (i = 0; i < li.length; i++) {
         a = li[i].getElementsByTagName("a")[0];
-        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        if (a.innerHTML.toUpperCase().indexOf(this.searchInput()) > -1) {
             li[i].style.display = "";
         } else {
             li[i].style.display = "none";
 
-        }
+          }
     }
-}
+  }
+};
+
+
+// Activates knockout.js
+ko.applyBindings(new AppViewModel());

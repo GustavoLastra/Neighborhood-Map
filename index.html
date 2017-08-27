@@ -26,7 +26,7 @@
         <div class="options-box">
           <div class="input-group">
             <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-            <input id="myInput" type="text" class="form-control" name="search" placeholder="Search for names.." onkeyup="myFunction()" value="a">
+            <input data-bind="textInput: searchInput,  valueUpdate: 'input', executeOnEnter: filter" class="form-control" placeholder="Search for names.." />
           </div>
             <ul id="myUL">
               <li><a href="#" class="header">A</a></li>
