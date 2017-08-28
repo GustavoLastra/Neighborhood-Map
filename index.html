@@ -19,11 +19,29 @@
   </head>
   <body class="container-fluid">
     <nav class="navbar fixed-top navbar-inverse bg-inverse  nullRadius">
-      <a class="navbar-brand" href="#">Neighborhood Map</a>
+      <a class="navbar-brand" href="#">New in town?</a>
     </nav>
     <aside class="row ">
       <section class=" col-sm-3 ">
         <div class="options-box">
+            <h1>Where do you want to go?</h1>  <!--Park, cafe, cinema, supermark, pharacy, restaurant-->
+            <div class="btn-group btn-group-justified">
+              <a type="button" class="btn btn-primary">Café</a>
+              <a type="button" class="btn btn-primary">Store</a>
+              <a type="button" class="btn btn-primary">Restaurant</a>
+              <div class="btn-group">
+                <button id="drop" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                More <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">Pharmacy</a></li>
+                  <li><a href="#">Hospital</a></li>
+                  <li><a href="#">Cinema</a></li>
+                  <li><a href="#">Museum</a></li>
+                  <li><a href="#">Theater</a></li>
+                  <li><a href="#">Shopping</a></li>
+                </ul>
+              </div>
+            </div>
           <div class="input-group">
             <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
             <input data-bind="textInput: searchInput,  valueUpdate: 'input', executeOnEnter: filter" class="form-control" placeholder="Search for names.." />
@@ -53,7 +71,7 @@
     </section>
     <!--googlemaps API-->
     <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6-uNO7k-iIAyhn7UbItH16BunkdyExRY&callback=initMap"type="text/javascript">
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6-uNO7k-iIAyhn7UbItH16BunkdyExRY&libraries=places&callback=initMap"type="text/javascript">
     </script>
     <script type="text/javascript" src="js/map.js"></script>
     <script type="text/javascript" src="js/app.js"></script>

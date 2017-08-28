@@ -4,7 +4,7 @@ function initMap(){
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat:  52.520008, lng: 13.404954},
     zoom: 8
-  })  
+  })
 }
 $(window).resize(function () {
     var h = $(window).height(),
@@ -12,3 +12,14 @@ $(window).resize(function () {
 
     $('#map').css('height', (h - offsetTop));
 }).resize();
+
+$(function(){
+
+   $(".dropdown-menu li a").click(function(){
+
+     $("#drop").text($(this).text());
+     
+
+  });
+
+});
