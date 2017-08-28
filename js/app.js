@@ -1,16 +1,21 @@
 /*            View          */
 
 
-/*           Markers        */
-function markersInit() {
-  var locations = [
+/*            Model          */
+
+var model = {
+   locations : [
     {title: 'zuHause', location: {lat:53.59542605156735, lng:9.977950828203378}},
     {title: 'Die Pizzeria', location: {lat:53.59623, lng: 9.9875399}},
     {title: 'Kaufland', location: {lat:53.6010428, lng:9.9745951}},
     {title: 'Café Borchers', location: {lat:53.5942846, lng:9.9869582}},
     {title: 'Apotheke', location: {lat: 53.5871711, lng: 9.9849477}}
-  ];
+  ]
+}
 
+
+/*           Markers        */
+function markersInit() {
   //var home = {lat: 53.59542605156735, lng: 9.977950828203378};
   var largeInfowindow = new google.maps.InfoWindow();
   var bounds = new google.maps.LatLngBounds();
@@ -21,9 +26,9 @@ function markersInit() {
   // mouses over the marker.
   var highlightedIcon = makeMarkerIcon('FFFF24');
 
-  for(var i=0; i<locations.length;i++){
-    var position = locations[i].location;
-    var title = locations[i].title;
+  for(var i=0; i<model.locations.length;i++){
+    var position = model.locations[i].location;
+    var title = model.locations[i].title;
     var marker = new google.maps.Marker({
       position: position,
       title: title,
@@ -75,72 +80,84 @@ function markersInit() {
   }
 
   /*         PlacesServices       */
-  var service = new google.maps.places.PlacesService(map);
-  service.nearbySearch({
-    location: locations[0].location,
-    radius: 500,
-    type: ['store']
-  }, callback);
+
 
 } /*         Endof markersInit       */
 
-
-function callback(results, status) {
-if (status === google.maps.places.PlacesServiceStatus.OK) {
-  for (var i = 0; i < results.length; i++) {
-    createMarker(results[i]);
-  }
-}
-}
-
-function createMarker(place) {
-var placeLoc = place.geometry.location;
-var marker = new google.maps.Marker({
-  map: map,
-  position: place.geometry.location
-});
-
-google.maps.event.addListener(marker, 'click', function() {
-  infowindow.setContent(place.name);
-  infowindow.open(map, this);
-});
-}
-
 /* ViewModel */
-ko.bindingHandlers.executeOnEnter = {
-    init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
-        // This will be called when the binding is first applied to an element
-        // Set up any initial state, event handlers, etc. here
-        var callback = valueAccessor();
-        $(element).keypress(function (event) {
-            var keyCode = (event.which ? event.which : event.keyCode);
-            if (keyCode === 13) {
-                callback.call(viewModel);
-                return false;
-            }
-            return true;
-        });
-    }
-};
 function AppViewModel() {
-  this.searchInput = ko.observable();
-  var c = this.searchInput();
-  console.log(c);
+  var self=this;
+  self.searchInput = ko.observable('');
+  self.searchResult = ko.observableArray();
+
+
+  var c = self.searchInput();
   var ul = $("#myUL");
   var li = $("li");
-  this.filter = function(){
-    console.log(this.searchInput());
-    this.searchInput(this.searchInput().toUpperCase()); // Write back a modified value
-    for (i = 0; i < li.length; i++) {
-        a = li[i].getElementsByTagName("a")[0];
-        if (a.innerHTML.toUpperCase().indexOf(this.searchInput()) > -1) {
-            li[i].style.display = "";
-        } else {
-            li[i].style.display = "none";
+  self.filterResult = ko.computed(function() {
+    var someInput = self.searchInput().toLowerCase();
+    if (!someInput) {
+        //if there is no filter, then return the whole list
+        for (i=0; i< markers.length; i++) {
+          console.log(markers.length);
+          markers[i].marker.setVisible(true);
+        }
+        return self.searchResult();
+        console.log(self.searchResult());
+      }
 
-          }
+      else {
+        //if there is a filter then use arrayFilter to shorten the list
+        return ko.utils.arrayFilter(self.searchResult(), function(item) {
+          var string = item.name.toLowerCase();
+          for (i=0; i < markers.length; i++) {
+            var str2 = markers[i].marker.title.toLowerCase();
+            if(str2.search(lcFilter) >=0)
+              {markers[i].marker.setVisible(true);}
+            else
+              {markers[i].marker.setVisible(false);}
+            }
+        if( string.search(someInput) >= 0 )
+            {return true;}
+          else
+            {return false;}
+            });
+        }
+  }, this);
+  self.searchCafe = function(){
+    infowindow = new google.maps.InfoWindow();
+    var service = new google.maps.places.PlacesService(map);
+    service.nearbySearch({
+      location: model.locations[1].location,
+      radius: 500,
+      type: ['cafe']
+    }, callback);
     }
+
+
+    function callback(results, status) {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        for (var i = 0; i < results.length; i++) {
+          self.searchResult.push(results[i]);
+          createMarker(results[i]);
+        }
+      }
+    }
+
+    function createMarker(place) {
+    var placeLoc = place.geometry.location;
+    var marker = new google.maps.Marker({
+      map: map,
+      position: place.geometry.location
+    });
+
+    google.maps.event.addListener(marker, 'click', function() {
+      infowindow.setContent(place.name);
+      infowindow.open(map, this);
+    });
+
   }
+
 };
 
 

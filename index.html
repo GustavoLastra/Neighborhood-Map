@@ -26,14 +26,14 @@
         <div class="options-box">
             <h1>Where do you want to go?</h1>  <!--Park, cafe, cinema, supermark, pharacy, restaurant-->
             <div class="btn-group btn-group-justified">
-              <a type="button" class="btn btn-primary">Café</a>
+              <a data-bind='event: { click: searchCafe}' type="button" class="btn btn-primary">Café</a>
               <a type="button" class="btn btn-primary">Store</a>
               <a type="button" class="btn btn-primary">Restaurant</a>
               <div class="btn-group">
                 <button id="drop" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                 More <span class="caret"></span></button>
                 <ul class="dropdown-menu" role="menu">
-                  <li><a href="#">Pharmacy</a></li>
+                  <li ><a href="#">Pharmacy</a></li>
                   <li><a href="#">Hospital</a></li>
                   <li><a href="#">Cinema</a></li>
                   <li><a href="#">Museum</a></li>
@@ -44,22 +44,12 @@
             </div>
           <div class="input-group">
             <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-            <input data-bind="textInput: searchInput,  valueUpdate: 'input', executeOnEnter: filter" class="form-control" placeholder="Search for names.." />
+            <input data-bind="textInput: searchInput" class="form-control" placeholder="Search for names.." />
           </div>
-            <ul id="myUL">
-              <li><a href="#" class="header">A</a></li>
-              <li><a href="#">Adele</a></li>
-              <li><a href="#">Agnes</a></li>
-
-              <li><a href="#" class="header">B</a></li>
-              <li><a href="#">Billy</a></li>
-              <li><a href="#">Bob</a></li>
-
-              <li><a href="#" class="header">C</a></li>
-              <li><a href="#">Calvin</a></li>
-              <li><a href="#">Christina</a></li>
-              <li><a href="#">Cindy</a></li>
-            </ul>
+          <ul id="myUL" class="" data-bind="foreach: filterResult">
+              <!--<li><a class="header">A</a></li>-->
+              <li class=""><a data-bind="text: name"></a></li>
+          </ul>
             <button type="button" onclick="markersInit()" class="btn btn-primary btn-block" name="button">See Markers</button>
         </div>
         </section>
