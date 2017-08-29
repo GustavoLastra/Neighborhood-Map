@@ -24,7 +24,17 @@
     <aside class="row ">
       <section class=" col-sm-3 ">
         <div class="options-box">
-            <h1>Where do you want to go?</h1>  <!--Park, cafe, cinema, supermark, pharacy, restaurant-->
+            <h1>Meet Hamburg</h1>  <!--Park, cafe, cinema, supermark, pharacy, restaurant-->
+            <div class="btn-group btn-group-justified">
+              <div class="btn-group">
+                <button id="drop" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                Select a distict <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu" data-bind="foreach: districts">
+                  <li >data-bind="text: title"</li>
+                </ul>
+              </div>
+            </div>
+
             <div class="btn-group btn-group-justified">
               <a data-bind='event: { click: searchCafe}' type="button" class="btn btn-primary">Café</a>
               <a type="button" class="btn btn-primary">Store</a>
@@ -50,7 +60,6 @@
               <!--<li><a class="header">A</a></li>-->
               <li class=""><a data-bind="text: name"></a></li>
           </ul>
-            <button type="button" onclick="markersInit()" class="btn btn-primary btn-block" name="button">See Markers</button>
         </div>
         </section>
         <main class="col-sm-9">
@@ -60,10 +69,10 @@
       </aside>
     </section>
     <!--googlemaps API-->
-    <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6-uNO7k-iIAyhn7UbItH16BunkdyExRY&libraries=places&callback=initMap"type="text/javascript">
-    </script>
-    <script type="text/javascript" src="js/map.js"></script>
-    <script type="text/javascript" src="js/app.js"></script>
+    <script  async defers src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6-uNO7k-iIAyhn7UbItH16BunkdyExRY&libraries=places&callback=init"type="text/javascript"></script>
+
+    <script  type="text/javascript" src="js/AppViewModel.js"></script>
+    <script  type="text/javascript" src="js/app.js"></script>
+
   </body>
 </html>
