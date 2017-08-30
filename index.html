@@ -15,7 +15,6 @@
     <!--knockout-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>
-
   </head>
   <body class="container-fluid">
     <nav class="navbar fixed-top navbar-inverse bg-inverse  nullRadius">
@@ -24,42 +23,30 @@
     <aside class="row ">
       <section class=" col-sm-3 ">
         <div class="options-box">
-            <div class="btn-group btn-group-justified">
-              <div class="btn-group">
-                <button data-bind="text: nameDistrict" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                <span class="caret" ></span></button>
-                <ul class="dropdown-menu" role="menu" data-bind="foreach: markers">
-                  <li> <a data-bind='text: title, click: $parent.actualizeDistrict'></a></li>
-                </ul>
-              </div>
+          <div class="btn-group btn-group-justified">
+            <div class="btn-group">
+              <button data-bind="text: nameDistrict" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+              <span class="caret" ></span></button>
+              <ul class="dropdown-menu" role="menu" data-bind="foreach: markers">
+                <li> <a data-bind='text: title, click: $parent.actualizeDistrict'></a></li>
+              </ul>
             </div>
-            <div class="btn-group btn-group-justified">
-              <div class="btn-group">
-                <button data-bind="text: nameService" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                Where do you want to go? <span class="caret"></span></button>
-                <ul class="dropdown-menu" role="menu" data-bind="foreach: placeTypes">
-                  <!--<li><a data-bind='event: { click: searchCafe}' href="#">Café</a></li>-->
-                  <!--<li><a data-bind='text: title, click: function() { $parent.actualizeService(); $parent.searchPlaces()  }'></a></li>-->
-                  <li><a data-bind='text: title, click: $parent.actualizeService'></a></li>
-
-                  <!--<li><a href="#">Restaurant</a></li>
-                  <li><a href="#">Store</a></li>
-                  <li ><a href="#">Pharmacy</a></li>
-                  <li><a href="#">Hospital</a></li>
-                  <li><a href="#">Cinema</a></li>
-                  <li><a href="#">Museum</a></li>
-                  <li><a href="#">Theater</a></li>
-                  <li><a href="#">Shopping</a></li>-->
-                </ul>
-              </div>
+          </div>
+          <div class="btn-group btn-group-justified">
+            <div class="btn-group">
+              <button data-bind="text: nameService" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+              Where do you want to go? <span class="caret"></span></button>
+              <ul class="dropdown-menu" role="menu" data-bind="foreach: placeTypes">
+                <li><a data-bind='text: title, click: $parent.actualizeService'></a></li>
+              </ul>
             </div>
+          </div>
           <div class="input-group">
             <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
             <input data-bind="textInput: searchInput" class="form-control" placeholder="Search for names.." />
           </div>
           <ul id="myUL" class="" data-bind="foreach: filterResult">
-              <!--<li><a class="header">A</a></li>-->
-              <li class=""><a data-bind="text: name"></a></li>
+              <li class=""><a data-bind="text: name, click: $parent.displayInfoWindowForPlaces"></a></li>
           </ul>
         </div>
         </section>

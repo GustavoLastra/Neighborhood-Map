@@ -1,8 +1,6 @@
 /* ViewModel */
 var AppViewModel = function() {
   var self=this;
-  //var markers = [];
-  //var markersForPlaces = [];
   self.placeTypes = ko.observableArray();
   self.markersForPlaces = ko.observableArray();
   self.markers = ko.observableArray();
@@ -12,7 +10,6 @@ var AppViewModel = function() {
   self.nameDistrict = ko.observable('Select a district');
   self.nameService = ko.observable('Where do you want to go');
 
-
   self.actualizeDistrict = ko.pureComputed({
     read : function (){
       return self.nameDistrict();
@@ -20,11 +17,12 @@ var AppViewModel = function() {
     write: function (value) {
       //console.log( value.title);
       self.nameDistrict(isNaN(value.title) ? value.title : "No entiendo esto");
-
       console.log("actualized district: " + self.nameDistrict());
+      //self.displayInfoWindow();
     },
     owner: this
   });
+
   self.actualizeService = ko.pureComputed({
     read : function (){
       //console.log(self.nameService());
@@ -36,56 +34,10 @@ var AppViewModel = function() {
       self.nameService(isNaN(value.title) ? value.title : "No entiendo esto");
       console.log("actualized service: " + self.nameService());
       self.searchPlaces();
+      //self.displayInfoWindowForPlaces();
     },
     owner: this
   });
-  /*self.checkPlace = ko.computed(function() {
-    console.log("1: " + self.markers()[0]);
-    console.log("2: " + self.markers().length);
-    console.log("3: " + self.nameDistrict());
-    for(var i=0; i<self.markers().length;i++){
-      console.log("4: " + self.makers());
-      if(self.nameDistrict()===self.makers[i].title){
-        location = self.markers().position;
-        console.log(MapView.map);
-        MapView.map.center = location;
-        MapView.map.zoom = 10;
-      } else {
-        radius = 1000;
-        location = {lat: 53.5511, lng: 9.9937};
-      }
-    }
-  });*/
-
-  // look for cafe "places"
-  self.searchPlaces = function() {
-    infowindow = new google.maps.InfoWindow();
-    var service = new google.maps.places.PlacesService(MapView.map);
-    var location;
-    var radius = 1000;
-
-    for(var i=0; i<Model.locations.length;i++){
-      if(self.nameDistrict()===Model.locations[i].title){
-        location = Model.locations[i].location;
-        //console.log(self.nameDistrict());
-        console.log( "Search Places: "+ location);
-        MapView.map.setCenter(location);
-        MapView.map.setZoom(15);
-      } else {
-        //radius = 1000;
-        //location = {lat: 53.5511, lng: 9.9937};
-      }
-    }
-    console.log("searchPlace: " + self.nameService().toLowerCase());
-    service.nearbySearch({
-      location: location,
-      radius: radius,
-      //type: ['cafe']
-      type: [self.nameService().toLowerCase()]
-    }, callback);
-}
-
-
 
   //Filter results("searchResult") based on "searchInput"
   self.filterResult = ko.computed(function() {
@@ -119,6 +71,51 @@ var AppViewModel = function() {
       }
   }, this);
 
+  self.displayInfoWindowForPlaces = function(data) {
+    console.log("displayInfoWindowForPlaces parameter: " + data.name);
+    for(i=0;i<self.markersForPlaces().length;i++){
+      if(self.markersForPlaces()[i].title===data.name){
+        self.populateInfoWindowForPlaces(self.markersForPlaces()[i],MapView.largeInfowindow);
+      }
+    }
+  }
+
+  self.populateInfoWindowForPlaces = function(marker, infowindow){
+    if(infowindow.marker != marker){
+      infowindow.marker = marker;
+      console.log(marker);
+      infowindow.setContent('<div>'+ marker.title +'</div>');
+      infowindow.open(MapView.map,marker);
+      infowindow.addListener("closeclick", function(){
+        infowindow.marker=null;
+      });
+    }
+  }
+
+  // look for cafe "places"
+  self.searchPlaces = function() {
+    infowindow = new google.maps.InfoWindow();
+    var service = new google.maps.places.PlacesService(MapView.map);
+    var location;
+    var radius = 1000;
+    for(var i=0; i<Model.locations.length;i++){
+      if(self.nameDistrict()===Model.locations[i].title){
+        location = Model.locations[i].location;
+        //console.log(self.nameDistrict());
+        console.log( "Search Places: "+ location);
+        MapView.map.setCenter(location);
+        MapView.map.setZoom(15);
+      }
+    }
+
+    console.log("searchPlace: " + self.nameService().toLowerCase());
+    service.nearbySearch({
+      location: location,
+      radius: radius,
+      //type: ['cafe']
+      type: [self.nameService().toLowerCase()]
+    }, callback);
+  }
 
   function callback(results, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
@@ -126,9 +123,9 @@ var AppViewModel = function() {
         self.searchResult.push(results[i]);
         createMarkersForPlaces(results[i],i);
       }
-      console.log(self.markersForPlaces());
     }
   }
+
   function createMarkersForPlaces(place,i) {
     var placeLoc = place.geometry.location;
       self.markersForPlaces.push(new google.maps.Marker({
@@ -139,11 +136,11 @@ var AppViewModel = function() {
     }));
 
     self.markersForPlaces()[i].addListener("click", function(){
-    populateInfoWindowForPlaces(this, MapView.largeInfowindow);
+    self.populateInfoWindowForPlaces(this, MapView.largeInfowindow);
     //MapView.bounds.extend(self.markersForPlaces()[i].position);
     });
   }
-  function populateInfoWindowForPlaces(marker, infowindow){
+  /*function populateInfoWindowForPlaces(marker, infowindow){
     if(infowindow.marker != marker){
       infowindow.marker = marker;
       console.log(marker);
@@ -153,17 +150,18 @@ var AppViewModel = function() {
         infowindow.setMarker(null);
       });
     }
-  }
+  }*/
 
 };
+
 AppViewModel.prototype.createPlaceTypes = function(list) {
   for(var i=0; i<list.length;i++){
     this.placeTypes.push(list[i]);
   }
 };
+
 AppViewModel.prototype.createMarkers = function() {
   for(var i=0; i<Model.locations.length;i++){
-
     var position = Model.locations[i].location;
     var title = Model.locations[i].title;
     var marker = new google.maps.Marker({
@@ -174,7 +172,6 @@ AppViewModel.prototype.createMarkers = function() {
       icon: MapView.defaultIcon,
       id: i
     });
-
     marker.addListener("click", function(){
       populateInfoWindow(this, MapView.largeInfowindow);
     });
@@ -193,7 +190,7 @@ AppViewModel.prototype.createMarkers = function() {
         infowindow.setContent('<div>'+ marker.title +'</div>');
         infowindow.open(MapView.map,marker);
         infowindow.addListener("closeclick", function(){
-          infowindow.setMarker(null);
+          infowindow.marker =null;
         });
       }
     }
@@ -210,18 +207,10 @@ AppViewModel.prototype.makeMarkerIcon = function(markerColor) {
     new google.maps.Size(21,34));
   return markerImage;
 }
+
 $(window).resize(function () {
     var h = $(window).height(),
         offsetTop = 0; // Calculate the top offset
 
     $('#map').css('height', (h - offsetTop));
 }).resize();
-
-/*$(function(){
-
-   $(".dropdown-menu .b li a").click(function(){
-     $(".btn:nth-child(4)").text($(this).text());
-
-  });
-
-});*/
