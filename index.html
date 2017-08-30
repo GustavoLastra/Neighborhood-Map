@@ -19,36 +19,37 @@
   </head>
   <body class="container-fluid">
     <nav class="navbar fixed-top navbar-inverse bg-inverse  nullRadius">
-      <a class="navbar-brand" href="#">New in town?</a>
+      <a class="navbar-brand" href="#">Meet Hamburg</a>
     </nav>
     <aside class="row ">
       <section class=" col-sm-3 ">
         <div class="options-box">
-            <h1>Meet Hamburg</h1>  <!--Park, cafe, cinema, supermark, pharacy, restaurant-->
             <div class="btn-group btn-group-justified">
               <div class="btn-group">
-                <button id="drop" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                Select a distict <span class="caret"></span></button>
-                <ul class="dropdown-menu" role="menu" data-bind="foreach: districts">
-                  <li >data-bind="text: title"</li>
+                <button data-bind="text: nameDistrict" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                <span class="caret" ></span></button>
+                <ul class="dropdown-menu" role="menu" data-bind="foreach: markers">
+                  <li> <a data-bind='text: title, click: $parent.actualizeDistrict'></a></li>
                 </ul>
               </div>
             </div>
-
             <div class="btn-group btn-group-justified">
-              <a data-bind='event: { click: searchCafe}' type="button" class="btn btn-primary">Café</a>
-              <a type="button" class="btn btn-primary">Store</a>
-              <a type="button" class="btn btn-primary">Restaurant</a>
               <div class="btn-group">
-                <button id="drop" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                More <span class="caret"></span></button>
-                <ul class="dropdown-menu" role="menu">
+                <button data-bind="text: nameService" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                Where do you want to go? <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu" data-bind="foreach: placeTypes">
+                  <!--<li><a data-bind='event: { click: searchCafe}' href="#">Café</a></li>-->
+                  <!--<li><a data-bind='text: title, click: function() { $parent.actualizeService(); $parent.searchPlaces()  }'></a></li>-->
+                  <li><a data-bind='text: title, click: $parent.actualizeService'></a></li>
+
+                  <!--<li><a href="#">Restaurant</a></li>
+                  <li><a href="#">Store</a></li>
                   <li ><a href="#">Pharmacy</a></li>
                   <li><a href="#">Hospital</a></li>
                   <li><a href="#">Cinema</a></li>
                   <li><a href="#">Museum</a></li>
                   <li><a href="#">Theater</a></li>
-                  <li><a href="#">Shopping</a></li>
+                  <li><a href="#">Shopping</a></li>-->
                 </ul>
               </div>
             </div>
