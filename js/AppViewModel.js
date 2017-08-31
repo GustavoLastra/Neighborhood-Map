@@ -9,7 +9,6 @@ var AppViewModel = function() {
   self.searchResult = ko.observableArray();
   self.nameDistrict = ko.observable('Select a district');
   self.nameService = ko.observable('Where do you want to go');
-
   self.actualizeDistrict = ko.pureComputed({
     read : function (){
       return self.nameDistrict();
@@ -18,11 +17,10 @@ var AppViewModel = function() {
       //console.log( value.title);
       self.nameDistrict(isNaN(value.title) ? value.title : "No entiendo esto");
       console.log("actualized district: " + self.nameDistrict());
-      //self.displayInfoWindow();
+      self.displayInfoWindow();
     },
     owner: this
   });
-
   self.actualizeService = ko.pureComputed({
     read : function (){
       //console.log(self.nameService());
@@ -38,7 +36,6 @@ var AppViewModel = function() {
     },
     owner: this
   });
-
   //Filter results("searchResult") based on "searchInput"
   self.filterResult = ko.computed(function() {
     var someInput = self.searchInput().toLowerCase();
@@ -50,7 +47,6 @@ var AppViewModel = function() {
         return self.searchResult();
         console.log(self.searchResult());
       }
-
       else {
         //if there is a filter then use arrayFilter to shorten the list
         return ko.utils.arrayFilter(self.searchResult(), function(item) {
@@ -70,17 +66,22 @@ var AppViewModel = function() {
         });
       }
   }, this);
-
   self.displayInfoWindowForPlaces = function(data) {
     console.log("displayInfoWindowForPlaces parameter: " + data.name);
     for(i=0;i<self.markersForPlaces().length;i++){
       if(self.markersForPlaces()[i].title===data.name){
-        self.populateInfoWindowForPlaces(self.markersForPlaces()[i],MapView.largeInfowindow);
+        self.populateInfoWindow(self.markersForPlaces()[i],MapView.largeInfowindow);
       }
     }
   }
-
-  self.populateInfoWindowForPlaces = function(marker, infowindow){
+  self.displayInfoWindow= function() {
+    for(i=0;i<self.markers().length;i++){
+      if(self.markers()[i].title===self.nameDistrict()){
+        self.populateInfoWindow(self.markers()[i],MapView.largeInfowindow);
+      }
+    }
+  }
+  self.populateInfoWindow = function(marker, infowindow){
     if(infowindow.marker != marker){
       infowindow.marker = marker;
       console.log(marker);
@@ -91,7 +92,6 @@ var AppViewModel = function() {
       });
     }
   }
-
   // look for cafe "places"
   self.searchPlaces = function() {
     infowindow = new google.maps.InfoWindow();
@@ -107,7 +107,6 @@ var AppViewModel = function() {
         MapView.map.setZoom(15);
       }
     }
-
     console.log("searchPlace: " + self.nameService().toLowerCase());
     service.nearbySearch({
       location: location,
@@ -116,7 +115,6 @@ var AppViewModel = function() {
       type: [self.nameService().toLowerCase()]
     }, callback);
   }
-
   function callback(results, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
       for (var i = 0; i < results.length; i++) {
@@ -125,7 +123,6 @@ var AppViewModel = function() {
       }
     }
   }
-
   function createMarkersForPlaces(place,i) {
     var placeLoc = place.geometry.location;
       self.markersForPlaces.push(new google.maps.Marker({
@@ -134,33 +131,20 @@ var AppViewModel = function() {
       position: place.geometry.location,
       title: place.name
     }));
-
     self.markersForPlaces()[i].addListener("click", function(){
-    self.populateInfoWindowForPlaces(this, MapView.largeInfowindow);
+    self.populateInfoWindow(this, MapView.largeInfowindow);
     //MapView.bounds.extend(self.markersForPlaces()[i].position);
     });
   }
-  /*function populateInfoWindowForPlaces(marker, infowindow){
-    if(infowindow.marker != marker){
-      infowindow.marker = marker;
-      console.log(marker);
-      infowindow.setContent('<div>'+ marker.title +'</div>');
-      infowindow.open(MapView.map,marker);
-      infowindow.addListener("closeclick", function(){
-        infowindow.setMarker(null);
-      });
-    }
-  }*/
-
 };
-
 AppViewModel.prototype.createPlaceTypes = function(list) {
   for(var i=0; i<list.length;i++){
     this.placeTypes.push(list[i]);
   }
 };
-
 AppViewModel.prototype.createMarkers = function() {
+  var self = this;
+  console.log(self);
   for(var i=0; i<Model.locations.length;i++){
     var position = Model.locations[i].location;
     var title = Model.locations[i].title;
@@ -173,7 +157,8 @@ AppViewModel.prototype.createMarkers = function() {
       id: i
     });
     marker.addListener("click", function(){
-      populateInfoWindow(this, MapView.largeInfowindow);
+      //populateInfoWindow(this, MapView.largeInfowindow);
+      self.populateInfoWindow(this, MapView.largeInfowindow);
     });
     marker.addListener('mouseover', function() {
       this.setIcon(MapView.highlightedIcon);
@@ -183,20 +168,8 @@ AppViewModel.prototype.createMarkers = function() {
     });
     MapView.bounds.extend(marker.position);
     this.markers.push(marker);
-    //console.log(this.markers()[i].position);
-    function populateInfoWindow(marker, infowindow){
-      if(infowindow.marker != marker){
-        infowindow.marker = marker;
-        infowindow.setContent('<div>'+ marker.title +'</div>');
-        infowindow.open(MapView.map,marker);
-        infowindow.addListener("closeclick", function(){
-          infowindow.marker =null;
-        });
-      }
-    }
   }
 };
-
 AppViewModel.prototype.makeMarkerIcon = function(markerColor) {
   var markerImage = new google.maps.MarkerImage(
     'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
@@ -207,7 +180,6 @@ AppViewModel.prototype.makeMarkerIcon = function(markerColor) {
     new google.maps.Size(21,34));
   return markerImage;
 }
-
 $(window).resize(function () {
     var h = $(window).height(),
         offsetTop = 0; // Calculate the top offset
