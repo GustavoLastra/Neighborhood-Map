@@ -45,7 +45,6 @@ var AppViewModel = function() {
           self.markersForPlaces()[i].setVisible(true);
         }
         return self.searchResult();
-        console.log(self.searchResult());
       }
       else {
         //if there is a filter then use arrayFilter to shorten the list
