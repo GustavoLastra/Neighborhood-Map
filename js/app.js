@@ -20,7 +20,7 @@ var Model = {
     {title: 'Bank', icon: 'https://maps.google.com/mapfiles/kml/pal3/icon21.png'},
     {title: 'Gym', icon: 'https://maps.google.com/mapfiles/kml/pal5/icon54.png'},
   ]
-}
+};
 /*           Map View        */
 var MapView = {
     init: function(){
@@ -49,7 +49,7 @@ var MapView = {
             }
           }
         }
-      }
+      };
       self.drawArea(HamburgMitte);
       self.drawArea(Eimsbüttel);
       self.drawArea(Altona);
@@ -62,14 +62,14 @@ var MapView = {
       Octopus.control.createPlaceTypes(Model.places);
       this.map.fitBounds(this.bounds);
     }
-}
+};
 /*            Octopus          */
 var Octopus = {
   init: function(){
     this.control = new AppViewModel();
     ko.applyBindings(this.control);
   }
-}
+};
 
 /*          Map init callback         */
 function init(){
