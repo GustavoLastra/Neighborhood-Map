@@ -8,7 +8,7 @@ var AppViewModel = function() {
   self.place = ko.observable('');
   self.searchResult = ko.observableArray();
   self.nameDistrict = ko.observable('Select a district');
-  self.nameService = ko.observable('Where do you want to go');
+  self.nameService = ko.observable('Where do you want to go?');
   self.actualizeDistrict = ko.pureComputed({
     read : function (){
       return self.nameDistrict();
@@ -101,19 +101,22 @@ var AppViewModel = function() {
     self.markersForPlaces([]);
     infowindow = new google.maps.InfoWindow();
     var service = new google.maps.places.PlacesService(MapView.map);
-    var location;
-    var radius = 500;
+    var location="";
+    var radius = 4000;
     for(var i=0; i<Model.locations.length;i++){
       if(self.nameDistrict()===Model.locations[i].title){
         location = Model.locations[i].location;
         console.log("Location: " + Model.locations[i].location.lng);
         //console.log( "Search Places: "+ Model.locations[i].location.lng);
         MapView.map.setCenter(location);
-        MapView.map.setZoom(15);
-      } else {
-        //location = {lat: 53.551085, lng:9.993682};
+        MapView.map.setZoom(12);
       }
+      if(location==""){
+        location = {lat:53.5127, lng: 9.9875399};
+      }
+
     }
+
     console.log("searchPlace: " + self.nameService().toLowerCase());
     service.nearbySearch({
       location: location,

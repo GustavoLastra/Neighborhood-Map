@@ -2,11 +2,11 @@
 var Model = {
    locations : [
     {title: 'Hamburg-Mitte', location: {lat:53.5127, lng: 9.9875399}},
-    {title: 'Eimsbüttel', location: {lat:53.574768, lng: 9.959453}},
-    {title: 'Altona', location: {lat:53.5792, lng:9.8746}},
+    {title: 'Eimsbüttel', location: {lat:53.604768, lng: 9.929453}},
+    {title: 'Altona', location: {lat:53.5692, lng:9.8746}},
     {title: 'Hamburg-Nord', location: {lat:53.6118, lng:10.0073}},
     {title: 'Wandsbek', location: {lat: 53.6536, lng: 10.1070}},
-    {title: 'Bergedorf', location: {lat:53.485984, lng:10.216255}},
+    {title: 'Bergedorf', location: {lat:53.460984, lng:10.150044}},
     {title: 'Hamburg', location: {lat: 53.45, lng: 9.966667}}
   ],
   places : [
