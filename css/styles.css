@@ -34,6 +34,12 @@ body {
   width: 100%;
 }
 
+.overflow {
+  	width: 100%;
+	  white-space: nowrap;
+  	overflow: hidden;
+}
+.ellipsis { text-overflow: ellipsis; }
 .nullRadius {
   border-radius: 0;
 }

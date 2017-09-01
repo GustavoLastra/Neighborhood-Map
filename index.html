@@ -47,7 +47,7 @@
             <input data-bind="textInput: searchInput" class="form-control" placeholder="Search for names.." />
           </div>
           <ul id="myUL" class="" data-bind="foreach: filterResult">
-              <li class=""><a data-bind="text: name, click: $parent.displayInfoWindowForPlaces"></a></li>
+              <li class="overflow ellipsis"><a data-bind="text: name, click: $parent.displayInfoWindowForPlaces"></a></li>
           </ul>
         </div>
         </section>
