@@ -28,11 +28,9 @@ var AppViewModel = function() {
       return self.nameService();
     } ,
     write: function (value) {
-      //console.log( value.title.toLowerCase());
       self.nameService(isNaN(value.title) ? value.title : "No entiendo esto");
       console.log("actualized service: " + self.nameService());
       self.searchPlaces();
-      //self.displayInfoWindowForPlaces();
     },
     owner: this
   });

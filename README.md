@@ -1,6 +1,6 @@
 # Meet Hamburg!!
 
-## How to test the Optimizations done on this project
+## How to try this project
 
 1. Go to [My Project](https://github.com/GustavoLastra/Website-Optimization/blob/master/README.md).
 2. Download the project as a zip.
@@ -23,10 +23,10 @@ Single-page application featuring a map of your Hamburg, Germany. It Includes:
 
 ##Code Structure
 
-The code's core is located on the "app.js" file: 
+The code's core is located on the "app.js" file:
 ```
 /*            Model          */
-var Model = {         //The locations refere to the districts, that Hamburg cosists of.
+var Model = {         //The locations refere to the districts, that Hamburg consists of.
    locations : [
     {title: 'Hamburg-Mitte', location: {lat:53.5127, lng: 9.9875399}},
     {title: 'Eimsbüttel', location: {lat:53.604768, lng: 9.929453}},
@@ -77,7 +77,7 @@ var MapView = {                     //MapView is in charge of creating the map, 
     }
 };
 /*            Octopus          */
-var Octopus = {                    //My idea was to create the AppViewModel "object" inside the Octopus in order to "combine" the structure of Vainilla.js with MVVM and to achieve modularity through separation of conserns. 
+var Octopus = {                    //My idea was to create the AppViewModel "object" inside the Octopus in order to "combine" the structure of Vanilla.js with the MVVM structure and to achieve modularity through separation of concerns.
   init: function(){
     this.control = new AppViewModel(); // the AppViewModel object is defined on the "AppViewMode.js" file and includes all Observable objects, arrays and computed functions of Knockout.js framework.
     ko.applyBindings(this.control);
@@ -95,17 +95,10 @@ function init(){
 1. Select a district
 2. Select the kind of place, you would like to go.
 ### Expected result
-1. A zoom the the selected District
-2. Showing markers of the places with its proper icon
-3. the posibility to search through the filter input on the listview.
-4. By selecting the name on list, should its marker show information about the place.
+1. A zoom to the selected district.
+2. Showing markers of the places with its proper icon.
+3. The possibility to search through the filter input on the listview.
+4. By selecting the name on the list, should its marker show information about the place.
 
 ## Author
 Gustavo Antonio Lastra Colorado
-
-
-
-
-
-
-
