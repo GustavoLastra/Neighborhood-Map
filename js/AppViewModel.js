@@ -93,17 +93,25 @@ var AppViewModel = function() {
   }
   // look for cafe "places"
   self.searchPlaces = function() {
+    self.searchResult([]);
+
+    for (var i = 0; i < self.markersForPlaces().length; i++) {
+          self.markersForPlaces()[i].setMap(null);
+    }
+    self.markersForPlaces([]);
     infowindow = new google.maps.InfoWindow();
     var service = new google.maps.places.PlacesService(MapView.map);
     var location;
-    var radius = 1000;
+    var radius = 500;
     for(var i=0; i<Model.locations.length;i++){
       if(self.nameDistrict()===Model.locations[i].title){
         location = Model.locations[i].location;
-        //console.log(self.nameDistrict());
-        console.log( "Search Places: "+ location);
+        console.log("Location: " + Model.locations[i].location.lng);
+        //console.log( "Search Places: "+ Model.locations[i].location.lng);
         MapView.map.setCenter(location);
         MapView.map.setZoom(15);
+      } else {
+        //location = {lat: 53.551085, lng:9.993682};
       }
     }
     console.log("searchPlace: " + self.nameService().toLowerCase());
@@ -123,13 +131,22 @@ var AppViewModel = function() {
     }
   }
   function createMarkersForPlaces(place,i) {
-    var placeLoc = place.geometry.location;
+    var icon;
+    for(var j=0;j<Model.places.length;j++){
+      if(self.nameService() == Model.places[j].title){
+        console.log("Result create icon for places: " + Model.places[j].icon)
+        icon = Model.places[j].icon;
+      }
+    }
+    console.log("icons set on this place: " + place.name);
       self.markersForPlaces.push(new google.maps.Marker({
       map: MapView.map,
-      animation: google.maps.Animation.DROP,
+      //animation: google.maps.Animation.DROP,
+      icon: icon,
       position: place.geometry.location,
       title: place.name
     }));
+    console.log(self.markersForPlaces()[i]);
     self.markersForPlaces()[i].addListener("click", function(){
     self.populateInfoWindow(this, MapView.largeInfowindow);
     //MapView.bounds.extend(self.markersForPlaces()[i].position);

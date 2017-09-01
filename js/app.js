@@ -10,15 +10,15 @@ var Model = {
     {title: 'Hamburg', location: {lat: 53.45, lng: 9.966667}}
   ],
   places : [
-    {title: 'Cafe'},
-    {title: 'Restaurant'},
-    {title: 'Store'},
-    {title: 'Pharmacy'},
-    {title: 'Hospital'},
-    {title: 'Atm'},
-    {title: 'Museum'},
-    {title: 'Bank'},
-    {title: 'Gym'},
+    {title: 'Cafe', icon: 'https://maps.google.com/mapfiles/kml/pal2/icon62.png' },
+    {title: 'Restaurant', icon: 'https://maps.google.com/mapfiles/kml/pal2/icon32.png'},
+    {title: 'Store', icon: 'https://maps.google.com/mapfiles/kml/pal3/icon18.png'},
+    {title: 'Pharmacy', icon: 'https://maps.google.com/mapfiles/kml/pal3/icon46.png'},
+    {title: 'Hospital', icon: 'https://maps.google.com/mapfiles/kml/pal3/icon38.png'},
+    {title: 'Atm', icon: 'https://maps.google.com/mapfiles/kml/pal2/icon53.png'},
+    {title: 'Museum', icon: 'https://maps.google.com/mapfiles/kml/pal5/icon36.png'},
+    {title: 'Bank', icon: 'https://maps.google.com/mapfiles/kml/pal3/icon21.png'},
+    {title: 'Gym', icon: 'https://maps.google.com/mapfiles/kml/pal5/icon54.png'},
   ]
 }
 /*           Map View        */
@@ -31,18 +31,12 @@ var MapView = {
       self.defaultIcon = Octopus.control.makeMarkerIcon('0091ff');
       self.highlightedIcon = Octopus.control.makeMarkerIcon('FFFF24');
       self.currentFeature_or_Features = null;
-      /*    Test        */
       self.map = new google.maps.Map(document.getElementById('map'), {
         center: {lat:  52.520008, lng: 13.404954},
         zoom: 8
       });
-      /* Test */
       self.drawArea = function(geoJSON){
         currentFeature_or_Features = new GeoJSON(geoJSON);
-        if (currentFeature_or_Features.type && currentFeature_or_Features.type == "Error"){
-          document.getElementById("put_geojson_string_here").value = currentFeature_or_Features.message;
-          return;
-        }
         if (currentFeature_or_Features.length){
           for (var i = 0; i < currentFeature_or_Features.length; i++){
             if(currentFeature_or_Features[i].length){
@@ -63,14 +57,13 @@ var MapView = {
       self.drawArea(Wandsbek);
       self.drawArea(Bergedorf);
       self.drawArea(Hamburg);
-      /* End of test  */
 
       Octopus.control.createMarkers();
       Octopus.control.createPlaceTypes(Model.places);
       this.map.fitBounds(this.bounds);
     }
 }
-
+/*            Octopus          */
 var Octopus = {
   init: function(){
     this.control = new AppViewModel();
