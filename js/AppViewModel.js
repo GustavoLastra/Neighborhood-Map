@@ -4,32 +4,32 @@ var AppViewModel = function() {
   self.placeTypes = ko.observableArray();
   self.markersForPlaces = ko.observableArray();
   self.markers = ko.observableArray();
+  self.touristicMarkers = ko.observableArray();
   self.searchInput = ko.observable('');
   self.place = ko.observable('');
   self.searchResult = ko.observableArray();
   self.nameDistrict = ko.observable('Select a district');
   self.nameService = ko.observable('Where do you want to go?');
+  self.actualizeTouristic = function(data){
+      console.log("touristic data: " + data)
+      self.displayInfoWindow(self.touristicMarkers(), data.title );
+  };
   self.actualizeDistrict = ko.pureComputed({
     read : function (){
       return self.nameDistrict();
     } ,
     write: function (value) {
-      //console.log( value.title);
       self.nameDistrict(isNaN(value.title) ? value.title : "No entiendo esto");
-      //console.log("actualized district: " + self.nameDistrict());
-      self.displayInfoWindow();
+      self.displayInfoWindow(self.markers(), self.nameDistrict());
     },
     owner: this
   });
   self.actualizeService = ko.pureComputed({
     read : function (){
-      //console.log(self.nameService());
-      //console.log("read service: " + self.nameService());
       return self.nameService();
     } ,
     write: function (value) {
       self.nameService(isNaN(value.title) ? value.title : "No entiendo esto");
-      //console.log("actualized service: " + self.nameService());
       self.searchPlaces();
     },
     owner: this
@@ -64,22 +64,20 @@ var AppViewModel = function() {
       }
   }, this);
   self.displayInfoWindowForPlaces = function(data) {
-    //console.log("displayInfoWindowForPlaces parameter: " + data.name);
     for(i=0;i<self.markersForPlaces().length;i++){
       if(self.markersForPlaces()[i].title===data.name){
         self.populateInfoWindow(self.markersForPlaces()[i],MapView.largeInfowindow);
       }
     }
   }
-  self.displayInfoWindow= function() {
-    for(i=0;i<self.markers().length;i++){
-      if(self.markers()[i].title===self.nameDistrict()){
-        self.populateInfoWindow(self.markers()[i],MapView.largeInfowindow);
+  self.displayInfoWindow= function(markers, name) {
+    for(i=0;i<markers.length;i++){
+      if(markers[i].title===name){
+        self.populateInfoWindow(markers[i],MapView.largeInfowindow);
       }
     }
   }
   self.populateInfoWindow = function(marker, infowindow){
-    /* Test */
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
       // Clear the infowindow content to give the streetview time to load.
@@ -121,13 +119,9 @@ var AppViewModel = function() {
       infowindow.open(MapView.map, marker);
     }
   }
-
-
-      /* End of Test*/
   // look for cafe "places"
   self.searchPlaces = function() {
     self.searchResult([]);
-
     for (var i = 0; i < self.markersForPlaces().length; i++) {
           self.markersForPlaces()[i].setMap(null);
     }
@@ -147,14 +141,10 @@ var AppViewModel = function() {
       if(location==""){
         location = {lat:53.5127, lng: 9.9875399};
       }
-
     }
-
-    //console.log("searchPlace: " + self.nameService().toLowerCase());
     service.nearbySearch({
       location: location,
       radius: radius,
-      //type: ['cafe']
       type: [self.nameService().toLowerCase()]
     }, callback);
   }
@@ -174,7 +164,6 @@ var AppViewModel = function() {
         icon = Model.places[j].icon;
       }
     }
-    //console.log("icons set on this place: " + place.name);
       self.markersForPlaces.push(new google.maps.Marker({
       map: MapView.map,
       //animation: google.maps.Animation.DROP,
@@ -182,10 +171,8 @@ var AppViewModel = function() {
       position: place.geometry.location,
       title: place.name
     }));
-    //console.log(self.markersForPlaces()[i]);
     self.markersForPlaces()[i].addListener("click", function(){
     self.populateInfoWindow(this, MapView.largeInfowindow);
-    //MapView.bounds.extend(self.markersForPlaces()[i].position);
     });
   }
 };
@@ -194,12 +181,11 @@ AppViewModel.prototype.createPlaceTypes = function(list) {
     this.placeTypes.push(list[i]);
   }
 };
-AppViewModel.prototype.createMarkers = function() {
+AppViewModel.prototype.createMarkers = function(loc, markerType) {
   var self = this;
-  //console.log(self);
-  for(var i=0; i<Model.locations.length;i++){
-    var position = Model.locations[i].location;
-    var title = Model.locations[i].title;
+  for(var i=0; i<loc.length;i++){
+    var position = loc[i].location;
+    var title = loc[i].title;
     var marker = new google.maps.Marker({
       position: position,
       title: title,
@@ -219,9 +205,15 @@ AppViewModel.prototype.createMarkers = function() {
       this.setIcon(MapView.defaultIcon);
     });
     MapView.bounds.extend(marker.position);
-    this.markers.push(marker);
+    if(markerType=="district"){
+      this.markers.push(marker);
+    }else{
+      this.touristicMarkers.push(marker);
+    }
+
   }
 };
+
 AppViewModel.prototype.makeMarkerIcon = function(markerColor) {
   var markerImage = new google.maps.MarkerImage(
     'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +

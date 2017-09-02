@@ -9,6 +9,16 @@ var Model = {         //The locations refere to the districts, that Hamburg cosi
     {title: 'Bergedorf', location: {lat:53.460984, lng:10.150044}},
     {title: 'Hamburg', location: {lat: 53.45, lng: 9.966667}}
   ],
+  touristicLocations : [
+     {title: 'Miniatur Wunderland', location: {lat:53.543729, lng: 9.988516}},
+     {title: 'The Port of Hamburg', location: {lat:53.509430, lng: 9.965477}},
+     {title: 'Kunsthalle Hamburg', location: {lat:53.555511, lng:10.002546}},
+     {title: 'Hamburg Rathaus (City Hall)', location: {lat:53.550383, lng:9.992369}},
+     {title: 'Elbphilharmonie', location: {lat: 53.541331, lng: 9.984127}},
+     {title: 'Ohlsdorf Cemetery', location: {lat:53.614532, lng:10.037234}},
+     {title: 'Museum of Arts and Crafts', location: {lat:53.551293, lng:10.009457}},
+     {title: 'The Alster Lakes', location: {lat: 53.568056, lng: 10.005833}}
+  ],
   places : [          //Here the options, that the user can look for.
     {title: 'Cafe', icon: 'https://maps.google.com/mapfiles/kml/pal2/icon62.png' },
     {title: 'Restaurant', icon: 'https://maps.google.com/mapfiles/kml/pal2/icon32.png'},
@@ -58,7 +68,8 @@ var MapView = {          //MapView is in charge of creating the map, the markers
       self.drawArea(Bergedorf);
       self.drawArea(Hamburg);
 
-      Octopus.control.createMarkers();
+      Octopus.control.createMarkers(Model.locations, "district");
+      Octopus.control.createMarkers(Model.touristicLocations, "touristic");
       Octopus.control.createPlaceTypes(Model.places);
       this.map.fitBounds(this.bounds);
     }
