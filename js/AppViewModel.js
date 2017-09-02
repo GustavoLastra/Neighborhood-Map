@@ -16,7 +16,7 @@ var AppViewModel = function() {
     write: function (value) {
       //console.log( value.title);
       self.nameDistrict(isNaN(value.title) ? value.title : "No entiendo esto");
-      console.log("actualized district: " + self.nameDistrict());
+      //console.log("actualized district: " + self.nameDistrict());
       self.displayInfoWindow();
     },
     owner: this
@@ -24,12 +24,12 @@ var AppViewModel = function() {
   self.actualizeService = ko.pureComputed({
     read : function (){
       //console.log(self.nameService());
-      console.log("read service: " + self.nameService());
+      //console.log("read service: " + self.nameService());
       return self.nameService();
     } ,
     write: function (value) {
       self.nameService(isNaN(value.title) ? value.title : "No entiendo esto");
-      console.log("actualized service: " + self.nameService());
+      //console.log("actualized service: " + self.nameService());
       self.searchPlaces();
     },
     owner: this
@@ -49,7 +49,7 @@ var AppViewModel = function() {
         return ko.utils.arrayFilter(self.searchResult(), function(item) {
           var string = item.name.toLowerCase();
           for (i=0; i < self.markersForPlaces().length; i++) {
-            console.log(self.markersForPlaces()[i]);
+            //console.log(self.markersForPlaces()[i]);
             var str2 = self.markersForPlaces()[i].title.toLowerCase();
             if(str2.search(someInput) >=0)
               {self.markersForPlaces()[i].setVisible(true);}
@@ -64,7 +64,7 @@ var AppViewModel = function() {
       }
   }, this);
   self.displayInfoWindowForPlaces = function(data) {
-    console.log("displayInfoWindowForPlaces parameter: " + data.name);
+    //console.log("displayInfoWindowForPlaces parameter: " + data.name);
     for(i=0;i<self.markersForPlaces().length;i++){
       if(self.markersForPlaces()[i].title===data.name){
         self.populateInfoWindow(self.markersForPlaces()[i],MapView.largeInfowindow);
@@ -79,16 +79,51 @@ var AppViewModel = function() {
     }
   }
   self.populateInfoWindow = function(marker, infowindow){
-    if(infowindow.marker != marker){
+    /* Test */
+    // Check to make sure the infowindow is not already opened on this marker.
+    if (infowindow.marker != marker) {
+      // Clear the infowindow content to give the streetview time to load.
+      infowindow.setContent('');
       infowindow.marker = marker;
-      console.log(marker);
-      infowindow.setContent('<div>'+ marker.title +'</div>');
-      infowindow.open(MapView.map,marker);
-      infowindow.addListener("closeclick", function(){
-        infowindow.marker=null;
+      // Make sure the marker property is cleared if the infowindow is closed.
+      infowindow.addListener('closeclick', function() {
+        infowindow.marker = null;
       });
+      var streetViewService = new google.maps.StreetViewService();
+      var radius = 300;
+      // In case the status is OK, which means the pano was found, compute the
+      // position of the streetview image, then calculate the heading, then get a
+      // panorama from that and set the options
+      function getStreetView(data, status) {
+        if (status == google.maps.StreetViewStatus.OK) {
+          var nearStreetViewLocation = data.location.latLng;
+          var heading = google.maps.geometry.spherical.computeHeading(
+            nearStreetViewLocation, marker.position);
+            infowindow.setContent('<div class="">' + marker.title + '</div><div class"" id="pano"></div>');
+            var panoramaOptions = {
+              position: nearStreetViewLocation,
+              pov: {
+                heading: heading,
+                pitch: 30
+              }
+            };
+          var panorama = new google.maps.StreetViewPanorama(
+            document.getElementById('pano'), panoramaOptions);
+        } else {
+          infowindow.setContent('<div>' + marker.title + '</div>' +
+            '<div>No Street View Found</div>');
+        }
+      }
+      // Use streetview service to get the closest streetview image within
+      // 50 meters of the markers position
+      streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+      // Open the infowindow on the correct marker.
+      infowindow.open(MapView.map, marker);
     }
   }
+
+
+      /* End of Test*/
   // look for cafe "places"
   self.searchPlaces = function() {
     self.searchResult([]);
@@ -104,7 +139,7 @@ var AppViewModel = function() {
     for(var i=0; i<Model.locations.length;i++){
       if(self.nameDistrict()===Model.locations[i].title){
         location = Model.locations[i].location;
-        console.log("Location: " + Model.locations[i].location.lng);
+        //console.log("Location: " + Model.locations[i].location.lng);
         //console.log( "Search Places: "+ Model.locations[i].location.lng);
         MapView.map.setCenter(location);
         MapView.map.setZoom(12);
@@ -115,7 +150,7 @@ var AppViewModel = function() {
 
     }
 
-    console.log("searchPlace: " + self.nameService().toLowerCase());
+    //console.log("searchPlace: " + self.nameService().toLowerCase());
     service.nearbySearch({
       location: location,
       radius: radius,
@@ -135,11 +170,11 @@ var AppViewModel = function() {
     var icon;
     for(var j=0;j<Model.places.length;j++){
       if(self.nameService() == Model.places[j].title){
-        console.log("Result create icon for places: " + Model.places[j].icon)
+        //console.log("Result create icon for places: " + Model.places[j].icon)
         icon = Model.places[j].icon;
       }
     }
-    console.log("icons set on this place: " + place.name);
+    //console.log("icons set on this place: " + place.name);
       self.markersForPlaces.push(new google.maps.Marker({
       map: MapView.map,
       //animation: google.maps.Animation.DROP,
@@ -147,7 +182,7 @@ var AppViewModel = function() {
       position: place.geometry.location,
       title: place.name
     }));
-    console.log(self.markersForPlaces()[i]);
+    //console.log(self.markersForPlaces()[i]);
     self.markersForPlaces()[i].addListener("click", function(){
     self.populateInfoWindow(this, MapView.largeInfowindow);
     //MapView.bounds.extend(self.markersForPlaces()[i].position);
@@ -161,7 +196,7 @@ AppViewModel.prototype.createPlaceTypes = function(list) {
 };
 AppViewModel.prototype.createMarkers = function() {
   var self = this;
-  console.log(self);
+  //console.log(self);
   for(var i=0; i<Model.locations.length;i++){
     var position = Model.locations[i].location;
     var title = Model.locations[i].title;

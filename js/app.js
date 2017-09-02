@@ -3,7 +3,7 @@ var Model = {         //The locations refere to the districts, that Hamburg cosi
    locations : [
     {title: 'Hamburg-Mitte', location: {lat:53.5127, lng: 9.9875399}},
     {title: 'Eimsbüttel', location: {lat:53.604768, lng: 9.929453}},
-    {title: 'Altona', location: {lat:53.5692, lng:9.8746}},
+    {title: 'Altona', location: {lat:53.56, lng:9.8746}},
     {title: 'Hamburg-Nord', location: {lat:53.6118, lng:10.0073}},
     {title: 'Wandsbek', location: {lat: 53.6536, lng: 10.1070}},
     {title: 'Bergedorf', location: {lat:53.460984, lng:10.150044}},
@@ -35,7 +35,7 @@ var MapView = {          //MapView is in charge of creating the map, the markers
         center: {lat:  52.520008, lng: 13.404954},
         zoom: 8
       });
-      self.drawArea = function(geoJSON){        / I draw the boundaries of each district with the coordinates provided by openstreetmap.org in form of Geojson objects.
+      self.drawArea = function(geoJSON){        // I draw the boundaries of each district with the coordinates provided by openstreetmap.org in form of Geojson objects.
         currentFeature_or_Features = new GeoJSON(geoJSON);
         if (currentFeature_or_Features.length){
           for (var i = 0; i < currentFeature_or_Features.length; i++){
@@ -64,7 +64,7 @@ var MapView = {          //MapView is in charge of creating the map, the markers
     }
 };
 /*            Octopus          */
-var Octopus = {           //My idea was to create the AppViewModel "object" inside the Octopus in order to "combine" the structure of Vainilla.js with MVVM and to achieve modularity through separation of conserns. 
+var Octopus = {           //My idea was to create the AppViewModel "object" inside the Octopus in order to "combine" the structure of Vainilla.js with MVVM and to achieve modularity through separation of conserns.
   init: function(){
     this.control = new AppViewModel();
     ko.applyBindings(this.control);
