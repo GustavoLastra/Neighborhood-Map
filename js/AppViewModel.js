@@ -22,6 +22,7 @@ var AppViewModel = function() {
     write: function (value) {
       self.nameDistrict(isNaN(value.title) ? value.title : "No entiendo esto");
       self.displayInfoWindow(self.markers(), self.nameDistrict());
+      self.touristicMarkers(self.markers())
     },
     owner: this
   });
@@ -97,6 +98,7 @@ var AppViewModel = function() {
     for(i=0;i<self.markersForPlaces().length;i++){
       if(self.markersForPlaces()[i].title===data.name){
         self.populateInfoWindow(self.markersForPlaces()[i],MapView.largeInfowindow);
+        self.toggleBounce(self.markersForPlaces()[i]);
       }
     }
   }
@@ -104,6 +106,7 @@ var AppViewModel = function() {
     for(i=0;i<markers.length;i++){
       if(markers[i].title===name){
         self.populateInfoWindow(markers[i],MapView.largeInfowindow);
+        self.toggleBounce(markers[i]);
       }
     }
   }
@@ -178,6 +181,15 @@ var AppViewModel = function() {
       type: [self.nameService().toLowerCase()]
     }, callback);
   }
+
+  self.toggleBounce = function(marker) {
+    if (marker.getAnimation() !== null) {
+      marker.setAnimation(null);
+    } else {
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+      setTimeout(function(){marker.setAnimation(null); }, 1500);  // 7500 one cycle
+    }
+  }
   function callback(results, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
       for (var i = 0; i < results.length; i++) {
@@ -195,14 +207,17 @@ var AppViewModel = function() {
       }
     }
       self.markersForPlaces.push(new google.maps.Marker({
-      map: MapView.map,
-      //animation: google.maps.Animation.DROP,
-      icon: icon,
       position: place.geometry.location,
+      map: MapView.map,
+      animation: google.maps.Animation.DROP,
+      icon: icon,
       title: place.name
     }));
+    //self.markersForPlaces()[i].addListener('click', this.toggleBounce(this));
     self.markersForPlaces()[i].addListener("click", function(){
     self.populateInfoWindow(this, MapView.largeInfowindow);
+    console.log(this)
+    self.toggleBounce(this)
     });
   }
 };
@@ -227,6 +242,7 @@ AppViewModel.prototype.createMarkers = function(loc, markerType) {
     marker.addListener("click", function(){
       //populateInfoWindow(this, MapView.largeInfowindow);
       self.populateInfoWindow(this, MapView.largeInfowindow);
+      self.toggleBounce(this)
     });
     marker.addListener('mouseover', function() {
       this.setIcon(MapView.highlightedIcon);
@@ -234,13 +250,14 @@ AppViewModel.prototype.createMarkers = function(loc, markerType) {
     marker.addListener('mouseout', function() {
       this.setIcon(MapView.defaultIcon);
     });
+    //marker.addListener('click', this.toggleBounce(this));
+
     MapView.bounds.extend(marker.position);
     if(markerType=="district"){
       this.markers.push(marker);
     }else{
       this.touristicMarkers.push(marker);
     }
-
   }
 };
 
