@@ -24,11 +24,19 @@
     <aside class="row ">
       <section class=" col-sm-3 ">
         <div class="options-box">
-          <li class="list-group-item active">Some touristic places</li>
-          <ul class="list-group"  data-bind="foreach: touristicMarkers">
+
+
+          <div class="list-group-item active">Some touristic places</div>
+          <div class="input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+            <input data-bind="textInput: touriticSearchInput" class="form-control" placeholder="Search for names.." />
+          </div>
+          <ul class="list-group"  data-bind="foreach: touristicFilterResult">
             <!--<li class="list-group-item active">Some touristic places</li>-->
             <li class="list-group-item"> <a data-bind='text: title, click: $parent.actualizeTouristic'></a></li>
           </ul>
+
+
           <div class="btn-group btn-group-justified">
             <div class="btn-group">
               <button data-bind="text: nameDistrict" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -63,7 +71,6 @@
       </aside>
     </section>
     <!--googlemaps API-->
-    <script  async defers src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6-uNO7k-iIAyhn7UbItH16BunkdyExRY&libraries=places&callback=init"type="text/javascript"></script>
     <script type="text/javascript" src="js/json/Hamburg-Mitte.js"></script>
     <script type="text/javascript" src="js/json/Eimsbüttel.js"></script>
     <script type="text/javascript" src="js/json/Altona.js"></script>
@@ -73,5 +80,7 @@
     <script type="text/javascript" src="js/json/Hamburg.js"></script>
     <script  type="text/javascript" src="js/AppViewModel.js"></script>
     <script  type="text/javascript" src="js/app.js"></script>
+    <script  async defers src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6-uNO7k-iIAyhn7UbItH16BunkdyExRY&libraries=places&callback=init"type="text/javascript"></script>
+
   </body>
 </html>

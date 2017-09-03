@@ -6,6 +6,7 @@ var AppViewModel = function() {
   self.markers = ko.observableArray();
   self.touristicMarkers = ko.observableArray();
   self.searchInput = ko.observable('');
+  self.touriticSearchInput = ko.observable('');
   self.place = ko.observable('');
   self.searchResult = ko.observableArray();
   self.nameDistrict = ko.observable('Select a district');
@@ -34,6 +35,35 @@ var AppViewModel = function() {
     },
     owner: this
   });
+  self.touristicFilterResult = ko.computed(function() {
+    var someInput = self.touriticSearchInput().toLowerCase();
+    if (!someInput) {
+        //if there is no filter, then return the whole list
+        for (i=0; i< self.touristicMarkers().length; i++) {
+          self.touristicMarkers()[i].setVisible(true);
+        }
+        return Model.touristicLocations;
+      }
+      else {
+        //if there is a filter then use arrayFilter to shorten the list
+        return ko.utils.arrayFilter(Model.touristicLocations, function(item) {
+          var string = item.title.toLowerCase();
+          for (i=0; i < self.touristicMarkers().length; i++) {
+            //console.log(self.markersForPlaces()[i]);
+            var str2 = self.touristicMarkers()[i].title.toLowerCase();
+            if(str2.search(someInput) >=0)
+              {self.touristicMarkers()[i].setVisible(true);}
+            else
+              {self.touristicMarkers()[i].setVisible(false);}
+            }
+          if( string.search(someInput) >= 0 )
+            {return true;}
+          else
+            {return false;}
+        });
+      }
+  }, this);
+
   //Filter results("searchResult") based on "searchInput"
   self.filterResult = ko.computed(function() {
     var someInput = self.searchInput().toLowerCase();
