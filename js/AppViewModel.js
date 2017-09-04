@@ -6,13 +6,13 @@ var AppViewModel = function() {
   self.markers = ko.observableArray();
   self.touristicMarkers = ko.observableArray();
   self.searchInput = ko.observable('');
+  self.wikiElem = ko.observable('');
   self.touriticSearchInput = ko.observable('');
   self.place = ko.observable('');
   self.searchResult = ko.observableArray();
   self.nameDistrict = ko.observable('Select a district');
   self.nameService = ko.observable('Where do you want to go?');
   self.actualizeTouristic = function(data){
-      console.log("touristic data: " + data)
       self.displayInfoWindow(self.touristicMarkers(), data.title );
   };
   self.actualizeDistrict = ko.pureComputed({
@@ -22,7 +22,7 @@ var AppViewModel = function() {
     write: function (value) {
       self.nameDistrict(isNaN(value.title) ? value.title : "No entiendo esto");
       self.displayInfoWindow(self.markers(), self.nameDistrict());
-      self.touristicMarkers(self.markers())
+      self.touristicMarkers(self.markers());
     },
     owner: this
   });
@@ -94,19 +94,24 @@ var AppViewModel = function() {
         });
       }
   }, this);
+
   self.displayInfoWindowForPlaces = function(data) {
     for(i=0;i<self.markersForPlaces().length;i++){
       if(self.markersForPlaces()[i].title===data.name){
-        self.populateInfoWindow(self.markersForPlaces()[i],MapView.largeInfowindow);
+        //self.populateInfoWindow(self.markersForPlaces()[i],MapView.largeInfowindow);
+        self.connectWikipediaApi(self.markersForPlaces()[i]);
         self.toggleBounce(self.markersForPlaces()[i]);
       }
     }
   }
+
   self.displayInfoWindow= function(markers, name) {
     for(i=0;i<markers.length;i++){
       if(markers[i].title===name){
-        self.populateInfoWindow(markers[i],MapView.largeInfowindow);
+        self.connectWikipediaApi(markers[i]);
+        //self.populateInfoWindow(markers[i],MapView.largeInfowindow);
         self.toggleBounce(markers[i]);
+
       }
     }
   }
@@ -130,7 +135,7 @@ var AppViewModel = function() {
           var nearStreetViewLocation = data.location.latLng;
           var heading = google.maps.geometry.spherical.computeHeading(
             nearStreetViewLocation, marker.position);
-            infowindow.setContent('<div class="">' + marker.title + '</div><div class"" id="pano"></div>');
+            infowindow.setContent('<div class="">' + marker.title + '</div><div class"" id="pano"></div>'+ self.wikiElem());
             var panoramaOptions = {
               position: nearStreetViewLocation,
               pov: {
@@ -166,8 +171,6 @@ var AppViewModel = function() {
     for(var i=0; i<Model.locations.length;i++){
       if(self.nameDistrict()===Model.locations[i].title){
         location = Model.locations[i].location;
-        //console.log("Location: " + Model.locations[i].location.lng);
-        //console.log( "Search Places: "+ Model.locations[i].location.lng);
         MapView.map.setCenter(location);
         MapView.map.setZoom(12);
       }
@@ -181,7 +184,23 @@ var AppViewModel = function() {
       type: [self.nameService().toLowerCase()]
     }, callback);
   }
-
+  // Wikipedia
+  self.connectWikipediaApi = function(marker) {
+    var wikiPlace = marker.title;
+    $.ajax({
+      url: 'https://en.wikipedia.org/w/api.php?action=opensearch&search='+ wikiPlace +'&format=json',
+      dataType: "jsonp",
+      timeout: 8000,
+      //jsonp: "callback"
+    }).done (function ( response) {
+          var articleStr = response[0];
+          var url = 'http://en.wikipedia.org/wiki/' + articleStr ;
+            self.wikiElem('<div class = ""><a href="' + url + '"  target="_blank">' + 'Wikipedia Link to ' +  articleStr   + '</a></div>');
+            self.populateInfoWindow(marker,MapView.largeInfowindow);
+      }).fail(function(err) {
+        throw err;
+      });
+  }
   self.toggleBounce = function(marker) {
     if (marker.getAnimation() !== null) {
       marker.setAnimation(null);
@@ -202,7 +221,6 @@ var AppViewModel = function() {
     var icon;
     for(var j=0;j<Model.places.length;j++){
       if(self.nameService() == Model.places[j].title){
-        //console.log("Result create icon for places: " + Model.places[j].icon)
         icon = Model.places[j].icon;
       }
     }
@@ -215,12 +233,14 @@ var AppViewModel = function() {
     }));
     //self.markersForPlaces()[i].addListener('click', this.toggleBounce(this));
     self.markersForPlaces()[i].addListener("click", function(){
-    self.populateInfoWindow(this, MapView.largeInfowindow);
-    console.log(this)
+    self.connectWikipediaApi(this);
+    //self.populateInfoWindow(this, MapView.largeInfowindow);
     self.toggleBounce(this)
     });
   }
+
 };
+
 AppViewModel.prototype.createPlaceTypes = function(list) {
   for(var i=0; i<list.length;i++){
     this.placeTypes.push(list[i]);
@@ -240,8 +260,8 @@ AppViewModel.prototype.createMarkers = function(loc, markerType) {
       id: i
     });
     marker.addListener("click", function(){
-      //populateInfoWindow(this, MapView.largeInfowindow);
-      self.populateInfoWindow(this, MapView.largeInfowindow);
+      self.connectWikipediaApi(this)
+    //self.populateInfoWindow(this, MapView.largeInfowindow);
       self.toggleBounce(this)
     });
     marker.addListener('mouseover', function() {
@@ -271,9 +291,10 @@ AppViewModel.prototype.makeMarkerIcon = function(markerColor) {
     new google.maps.Size(21,34));
   return markerImage;
 }
+
+
 $(window).resize(function () {
     var h = $(window).height(),
         offsetTop = 0; // Calculate the top offset
-
     $('#map').css('height', (h - offsetTop));
 }).resize();

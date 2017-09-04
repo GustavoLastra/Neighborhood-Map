@@ -71,7 +71,9 @@ var MapView = {          //MapView is in charge of creating the map, the markers
       Octopus.control.createMarkers(Model.locations, "district");
       Octopus.control.createMarkers(Model.touristicLocations, "touristic");
       Octopus.control.createPlaceTypes(Model.places);
-      this.map.fitBounds(this.bounds);
+      //google.maps.event.addDomListener(window, 'resize', function() {
+        this.map.fitBounds(this.bounds); // `bounds` is a `LatLngBounds` object
+      //});
     }
 };
 /*            Octopus          */
@@ -86,4 +88,8 @@ var Octopus = {           //My idea was to create the AppViewModel "object" insi
 function init(){
   Octopus.init();
   MapView.init();
+}
+/*          Map error handlicg callback         */
+function error(){
+    alert("Error loading the map. Please check the link to googlemaps' Api");
 }
