@@ -215,8 +215,8 @@ var AppViewModel = function() {
             }
           }
 
-      }).fail(function(err) {
-        alert('Problem connecting with wikipedia: '+ err );
+      }).fail(function() {
+        alert('Problem connecting with wikipedia' );
       });
   };
   self.toggleBounce = function(marker) {

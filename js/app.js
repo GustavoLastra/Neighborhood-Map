@@ -43,7 +43,6 @@ var MapView = {          //MapView is in charge of creating the map, the markers
       self.currentFeature_or_Features = null;
       self.map = new google.maps.Map(document.getElementById('map'), {
         center: {lat:  52.520008, lng: 13.404954},
-        zoom: 10
       });
       self.drawArea = function(geoJSON){        // I draw the boundaries of each district with the coordinates provided by openstreetmap.org in form of Geojson objects.
         currentFeature_or_Features = new GeoJSON(geoJSON);
