@@ -16,13 +16,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>
     <script type="text/javascript" src="js/json/GeoJSON.js"></script>
+
   </head>
   <body class="container-fluid">
     <nav class="navbar fixed-top navbar-inverse bg-inverse  nullRadius">
-      <a class="navbar-brand" href="#">Meet your Hamburg's district</a>
+      <a class="navbar-brand" href="#">Map aplication of Hamburg, Germany</a>
     </nav>
     <main class="row ">
-      <section class=" col-sm-3 ">
+      <section class="col-sm-3 ">
+        <h2>Let's go somewhere!</h2>
         <div class="options-box">
           <div class="list-group-item active">Some touristic places</div>
           <div class="input-group">
@@ -37,7 +39,7 @@
             <div class="btn-group">
               <button data-bind="text: nameDistrict" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
               <span class="caret" ></span></button>
-              <ul class="dropdown-menu" role="menu" data-bind="foreach: markers">
+              <ul class="dropdown-menu" role="menu" data-bind="foreach: Model.locations">
                 <li> <a data-bind='text: title, click: $parent.actualizeDistrict'></a></li>
               </ul>
             </div>
@@ -75,7 +77,7 @@
     <script type="text/javascript" src="js/json/Hamburg.js"></script>
     <script  type="text/javascript" src="js/AppViewModel.js"></script>
     <script  type="text/javascript" src="js/app.js"></script>
-    <script  async defers src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6-uNO7k-iIAyhn7UbItH16BunkdyExRY&libraries=places&callback=init" onerror="error()" type="text/javascript"></script>
+    <script  async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6-uNO7k-iIAyhn7UbItH16BunkdyExRY&libraries=places&callback=init" onerror="error()" type="text/javascript"></script>
 
   </body>
 </html>

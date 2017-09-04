@@ -22,7 +22,14 @@ var AppViewModel = function() {
     write: function (value) {
       self.nameDistrict(isNaN(value.title) ? value.title : "No entiendo esto");
       self.displayInfoWindow(self.markers(), self.nameDistrict());
-      self.touristicMarkers(self.markers());
+      //self.touristicMarkers(self.markers());
+
+      for(var i=0;i<Model.locations.length;i++){
+        if(Model.locations[i].title==self.nameDistrict()){
+          MapView.map.setCenter(Model.locations[i].location);
+          MapView.map.setZoom(12);
+        }
+      }
     },
     owner: this
   });
@@ -103,8 +110,7 @@ var AppViewModel = function() {
         self.toggleBounce(self.markersForPlaces()[i]);
       }
     }
-  }
-
+  };
   self.displayInfoWindow= function(markers, name) {
     for(i=0;i<markers.length;i++){
       if(markers[i].title===name){
@@ -114,7 +120,7 @@ var AppViewModel = function() {
 
       }
     }
-  }
+  };
   self.populateInfoWindow = function(marker, infowindow){
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
@@ -131,12 +137,14 @@ var AppViewModel = function() {
       // position of the streetview image, then calculate the heading, then get a
       // panorama from that and set the options
       function getStreetView(data, status) {
+        var nearStreetViewLocation;
+        var heading;
+        var panoramaOptions;
         if (status == google.maps.StreetViewStatus.OK) {
-          var nearStreetViewLocation = data.location.latLng;
-          var heading = google.maps.geometry.spherical.computeHeading(
-            nearStreetViewLocation, marker.position);
+          nearStreetViewLocation = data.location.latLng;
+          heading = google.maps.geometry.spherical.computeHeading(nearStreetViewLocation, marker.position);
             infowindow.setContent('<div class="">' + marker.title + '</div><div class"" id="pano"></div>'+ self.wikiElem());
-            var panoramaOptions = {
+            panoramaOptions = {
               position: nearStreetViewLocation,
               pov: {
                 heading: heading,
@@ -156,7 +164,7 @@ var AppViewModel = function() {
       // Open the infowindow on the correct marker.
       infowindow.open(MapView.map, marker);
     }
-  }
+  };
   // look for cafe "places"
   self.searchPlaces = function() {
     self.searchResult([]);
@@ -183,7 +191,7 @@ var AppViewModel = function() {
       radius: radius,
       type: [self.nameService().toLowerCase()]
     }, callback);
-  }
+  };
   // Wikipedia
   self.connectWikipediaApi = function(marker) {
     var wikiPlace = marker.title;
@@ -193,14 +201,24 @@ var AppViewModel = function() {
       timeout: 8000,
       //jsonp: "callback"
     }).done (function ( response) {
-          var articleStr = response[0];
-          var url = 'http://en.wikipedia.org/wiki/' + articleStr ;
-            self.wikiElem('<div class = ""><a href="' + url + '"  target="_blank">' + 'Wikipedia Link to ' +  articleStr   + '</a></div>');
-            self.populateInfoWindow(marker,MapView.largeInfowindow);
+          console.log("wikipedia response:" + response);
+          for(i=0;i<response.length;i++){
+            if (response[i][0].indexOf("https")!=-1){   //  Handle when there is no article founded on wikipedia (see with "The Alster Lakes")
+              var articleStr = response[0];
+              var url = 'http://en.wikipedia.org/wiki/' + articleStr ;
+                self.wikiElem('<div class = ""><a href="' + url + '"  target="_blank">' + 'Wikipedia Link to ' +  articleStr   + '</a></div>');
+                self.populateInfoWindow(marker,MapView.largeInfowindow);
+            }else {
+              var articleStr = response[0];
+                self.wikiElem('<div">' + 'A Wikipedia article was not found</div>');
+                self.populateInfoWindow(marker,MapView.largeInfowindow);
+            }
+          }
+
       }).fail(function(err) {
-        throw err;
+        alert('Problem connecting with wikipedia: '+ err );
       });
-  }
+  };
   self.toggleBounce = function(marker) {
     if (marker.getAnimation() !== null) {
       marker.setAnimation(null);
@@ -208,7 +226,7 @@ var AppViewModel = function() {
       marker.setAnimation(google.maps.Animation.BOUNCE);
       setTimeout(function(){marker.setAnimation(null); }, 1500);  // 7500 one cycle
     }
-  }
+  };
   function callback(results, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
       for (var i = 0; i < results.length; i++) {
@@ -235,7 +253,7 @@ var AppViewModel = function() {
     self.markersForPlaces()[i].addListener("click", function(){
     self.connectWikipediaApi(this);
     //self.populateInfoWindow(this, MapView.largeInfowindow);
-    self.toggleBounce(this)
+    self.toggleBounce(this);
     });
   }
 
@@ -290,7 +308,7 @@ AppViewModel.prototype.makeMarkerIcon = function(markerColor) {
     new google.maps.Point(10, 34),
     new google.maps.Size(21,34));
   return markerImage;
-}
+};
 
 
 $(window).resize(function () {

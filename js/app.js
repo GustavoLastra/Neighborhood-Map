@@ -11,12 +11,12 @@ var Model = {         //The locations refere to the districts, that Hamburg cosi
   ],
   touristicLocations : [
      {title: 'Miniatur Wunderland', location: {lat:53.543729, lng: 9.988516}},
-     {title: 'The Port of Hamburg', location: {lat:53.509430, lng: 9.965477}},
+     {title: 'Port of Hamburg', location: {lat:53.509430, lng: 9.965477}},
      {title: 'Kunsthalle Hamburg', location: {lat:53.555511, lng:10.002546}},
-     {title: 'Hamburg Rathaus (City Hall)', location: {lat:53.550383, lng:9.992369}},
+     {title: 'Hamburg Rathaus', location: {lat:53.550383, lng:9.992369}},
      {title: 'Elbphilharmonie', location: {lat: 53.541331, lng: 9.984127}},
      {title: 'Ohlsdorf Cemetery', location: {lat:53.614532, lng:10.037234}},
-     {title: 'Museum of Arts and Crafts', location: {lat:53.551293, lng:10.009457}},
+     {title: 'Museum für Kunst und Gewerbe', location: {lat:53.551293, lng:10.009457}},
      {title: 'The Alster Lakes', location: {lat: 53.568056, lng: 10.005833}}
   ],
   places : [          //Here the options, that the user can look for.
@@ -43,7 +43,7 @@ var MapView = {          //MapView is in charge of creating the map, the markers
       self.currentFeature_or_Features = null;
       self.map = new google.maps.Map(document.getElementById('map'), {
         center: {lat:  52.520008, lng: 13.404954},
-        zoom: 8
+        zoom: 10
       });
       self.drawArea = function(geoJSON){        // I draw the boundaries of each district with the coordinates provided by openstreetmap.org in form of Geojson objects.
         currentFeature_or_Features = new GeoJSON(geoJSON);
@@ -68,11 +68,11 @@ var MapView = {          //MapView is in charge of creating the map, the markers
       self.drawArea(Bergedorf);
       self.drawArea(Hamburg);
 
-      Octopus.control.createMarkers(Model.locations, "district");
+      //Octopus.control.createMarkers(Model.locations, "district");
       Octopus.control.createMarkers(Model.touristicLocations, "touristic");
       Octopus.control.createPlaceTypes(Model.places);
       //google.maps.event.addDomListener(window, 'resize', function() {
-        this.map.fitBounds(this.bounds); // `bounds` is a `LatLngBounds` object
+      this.map.fitBounds(this.bounds); // `bounds` is a `LatLngBounds` object
       //});
     }
 };
