@@ -17,7 +17,7 @@ var Model = {         //The locations refere to the districts, that Hamburg cosi
      {title: 'Elbphilharmonie', location: {lat: 53.541331, lng: 9.984127}},
      {title: 'Ohlsdorf Cemetery', location: {lat:53.614532, lng:10.037234}},
      {title: 'Museum für Kunst und Gewerbe', location: {lat:53.551293, lng:10.009457}},
-     {title: 'The Alster Lakes', location: {lat: 53.568056, lng: 10.005833}}
+     {title: 'Alster', location: {lat: 53.568056, lng: 10.005833}}
   ],
   places : [          //Here the options, that the user can look for.
     {title: 'Cafe', icon: 'https://maps.google.com/mapfiles/kml/pal2/icon62.png' },

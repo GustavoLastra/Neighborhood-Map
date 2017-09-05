@@ -56,7 +56,7 @@ var AppViewModel = function() {
         //if there is a filter then use arrayFilter to shorten the list
         return ko.utils.arrayFilter(Model.touristicLocations, function(item) {
           var string = item.title.toLowerCase();
-          for (i=0; i < self.touristicMarkers().length; i++) {
+          for (var i=0; i < self.touristicMarkers().length; i++) {
             //console.log(self.markersForPlaces()[i]);
             var str2 = self.touristicMarkers()[i].title.toLowerCase();
             if(str2.search(someInput) >=0)
@@ -201,17 +201,18 @@ var AppViewModel = function() {
       timeout: 8000,
       //jsonp: "callback"
     }).done (function ( response) {
-          console.log("wikipedia response:" + response);
           for(i=0;i<response.length;i++){
-            if (response[i][0].indexOf("https")!=-1){   //  Handle when there is no article founded on wikipedia (see with "The Alster Lakes")
-              var articleStr = response[0];
-              var url = 'http://en.wikipedia.org/wiki/' + articleStr ;
-                self.wikiElem('<div class = ""><a href="' + url + '"  target="_blank">' + 'Wikipedia Link to ' +  articleStr   + '</a></div>');
-                self.populateInfoWindow(marker,MapView.largeInfowindow);
-            }else {
-              var articleStr = response[0];
-                self.wikiElem('<div">' + 'A Wikipedia article was not found</div>');
-                self.populateInfoWindow(marker,MapView.largeInfowindow);
+            if(response[i][0]!= undefined){
+              if (response[i][0].indexOf("https")!=-1){   //  Handle when there is no article founded on wikipedia (see with "The Alster Lakes")
+                var articleStr = response[0];
+                var url = 'http://en.wikipedia.org/wiki/' + articleStr ;
+                  self.wikiElem('<div class = ""><a href="' + url + '"  target="_blank">' + 'Wikipedia Link to ' +  articleStr   + '</a></div>');
+                  self.populateInfoWindow(marker,MapView.largeInfowindow);
+              }else {
+                var articleStr = response[0];
+                  self.wikiElem('<div">' + 'A Wikipedia article was not found</div>');
+                  self.populateInfoWindow(marker,MapView.largeInfowindow);
+              }
             }
           }
 
