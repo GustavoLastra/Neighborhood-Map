@@ -36,13 +36,15 @@ var MapView = {          //MapView is in charge of creating the map, the markers
     init: function(){
       self = this;
       self.map;
+      self.ActualMarker;
       self.largeInfowindow = new google.maps.InfoWindow();
       self.bounds = new google.maps.LatLngBounds();
       self.defaultIcon = Octopus.control.makeMarkerIcon('0091ff');
       self.highlightedIcon = Octopus.control.makeMarkerIcon('FFFF24');
       self.currentFeature_or_Features = null;
       self.map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat:  52.520008, lng: 13.404954},
+        center: {lat:  53.5127, lng: 9.9875399},
+        zoom: 9
       });
       self.drawArea = function(geoJSON){        // I draw the boundaries of each district with the coordinates provided by openstreetmap.org in form of Geojson objects.
         currentFeature_or_Features = new GeoJSON(geoJSON);

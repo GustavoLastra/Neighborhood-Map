@@ -23,11 +23,12 @@ var AppViewModel = function() {
       self.nameDistrict(isNaN(value.title) ? value.title : "No entiendo esto");
       self.displayInfoWindow(self.markers(), self.nameDistrict());
       //self.touristicMarkers(self.markers());
+      MapView.largeInfowindow.close()
 
       for(var i=0;i<Model.locations.length;i++){
         if(Model.locations[i].title==self.nameDistrict()){
           MapView.map.setCenter(Model.locations[i].location);
-          MapView.map.setZoom(12);
+          MapView.map.setZoom(11);
         }
       }
     },
@@ -253,6 +254,7 @@ var AppViewModel = function() {
     //self.markersForPlaces()[i].addListener('click', this.toggleBounce(this));
     self.markersForPlaces()[i].addListener("click", function(){
     self.connectWikipediaApi(this);
+    MapView.ActualMarker=self.markersForPlaces()[i];
     //self.populateInfoWindow(this, MapView.largeInfowindow);
     self.toggleBounce(this);
     });
@@ -280,6 +282,7 @@ AppViewModel.prototype.createMarkers = function(loc, markerType) {
     });
     marker.addListener("click", function(){
       self.connectWikipediaApi(this)
+      MapView.ActualMarker=this;
     //self.populateInfoWindow(this, MapView.largeInfowindow);
       self.toggleBounce(this)
     });

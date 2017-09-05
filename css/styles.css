@@ -11,18 +11,6 @@ body {
   margin-right: 20%;
 }
 
-.sideNav {
-  height : 300px;
-}
-
-.navTrans {
-  background-color: rgba(34, 34, 34, .8);
-}
-
-.nopadding {
-   padding: 0 !important;
-}
-
 .options-box {
   background: #fff;
   border: 1px solid #999;
@@ -53,13 +41,13 @@ body {
 }
 
 /* sideNav  */
-#myUL {
+#my-ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
-#myUL li a {
+#my-ul li a {
   border: 1px solid #ddd;
   margin-top: -1px; /* Prevent double borders */
   background-color: #f6f6f6;
@@ -70,12 +58,12 @@ body {
   display: block;
 }
 
-#myUL li a.header {
+#my-ul li a.header {
   background-color: #e2e2e2;
   cursor: default;
 }
 
-#myUL li a:hover:not(.header) {
+#my-ul li a:hover:not(.header) {
   background-color: #eee;
 }
 

@@ -5,18 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Neighborhood Map</title>
-    <!--jquery-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!--bootstrap-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!--style-->
     <link rel="stylesheet" href="css/styles.css">
-    <!--knockout-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>
-    <script type="text/javascript" src="js/json/GeoJSON.js"></script>
-
   </head>
   <body class="container-fluid">
     <nav class="navbar fixed-top navbar-inverse bg-inverse  nullRadius">
@@ -29,7 +19,7 @@
           <div class="list-group-item active">Some touristic places</div>
           <div class="input-group">
             <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-            <input data-bind="textInput: touriticSearchInput" class="form-control" placeholder="Search for names.." />
+            <input data-bind="textInput: touriticSearchInput" class="form-control" placeholder="Search for names.." >
           </div>
           <ul class="list-group"  data-bind="foreach: touristicFilterResult">
             <!--<li class="list-group-item active">Some touristic places</li>-->
@@ -55,9 +45,9 @@
           </div>
           <div class="input-group">
             <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-            <input data-bind="textInput: searchInput" class="form-control" placeholder="Search for names.." />
+            <input data-bind="textInput: searchInput" class="form-control" placeholder="Search for names.." >
           </div>
-          <ul id="myUL" class="" data-bind="foreach: filterResult">
+          <ul id="my-ul" class="" data-bind="foreach: filterResult">
             <li class="overflow ellipsis"><a data-bind="text: name, click: $parent.displayInfoWindowForPlaces"></a></li>
           </ul>
         </div>
@@ -67,7 +57,14 @@
           </div>
       </aside>
     </main>
-    <!--googlemaps API-->
+    <!--jquery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!--bootstrap-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--knockout-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>
+    <script type="text/javascript" src="js/json/GeoJSON.js"></script>
     <script type="text/javascript" src="js/json/Hamburg-Mitte.js"></script>
     <script type="text/javascript" src="js/json/Eimsbüttel.js"></script>
     <script type="text/javascript" src="js/json/Altona.js"></script>
@@ -75,8 +72,11 @@
     <script type="text/javascript" src="js/json/Wandsbek.js"></script>
     <script type="text/javascript" src="js/json/Bergedorf.js"></script>
     <script type="text/javascript" src="js/json/Hamburg.js"></script>
+    <!--AppViewModel.js-->
     <script  type="text/javascript" src="js/AppViewModel.js"></script>
+    <!--app.js-->
     <script  type="text/javascript" src="js/app.js"></script>
+    <!--googlemaps API-->
     <script  async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6-uNO7k-iIAyhn7UbItH16BunkdyExRY&libraries=places&callback=init" onerror="error()" type="text/javascript"></script>
 
   </body>
